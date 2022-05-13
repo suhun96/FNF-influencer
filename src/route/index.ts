@@ -4,6 +4,7 @@ import filter from './filter.routes';
 import searchfilterrouter from './search.filter';
 import campaignrouter from './campaign.routes';
 import countfilter from './count.routes';
+import messagerouter from './message.routes'
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.use('/filter', filter);
 router.use('/search', searchfilterrouter);
 router.use('/campaign', campaignrouter);
 router.use('/count', countfilter);
+router.use('/message', messagerouter )
 
 export default router;
