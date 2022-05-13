@@ -3,6 +3,8 @@ import { Campaign } from '../entity/Campaign';
 import { Influencer } from '../entity/Influencer';
 import { Category } from '../entity/Category';
 import config from '../config/config';
+import { Influencer_Category } from '../entity/Influencer_category';
+import { In } from 'typeorm';
 
 const jwt = require('jsonwebtoken');
 
@@ -221,54 +223,67 @@ class FilterController {
         const limitNumber = parseInt(limit);
         const offset = req.query.offset as string;
         const offsetNumber = parseInt(offset);
+        const filter = await Influencer_Category.find({
+            relations: {
+                influencer: true,
+            },
+            where: {
+                category: {
+                    id: categoryId,
+                },
+            },
+            select: {
+                categoryID: true,
+                influencer: {
+                    id: true,
+                },
+            },
+        });
+        const influencerList = filter.map(item => item.influencer.id);
         if (sortOption === 'down') {
-            const influencerList = await Influencer.find({
-                relations: {
-                    influencer_categories: {
-                        category: true,
+            const result =
+                influencerList &&
+                (await Influencer.findAndCount({
+                    relations: {
+                        influencer_categories: {
+                            category: true,
+                        },
+                        influencer_hashtags: {
+                            hashtag: true,
+                        },
                     },
-                    influencer_hashtags: {
-                        hashtag: true,
+                    where: {
+                        id: In(influencerList),
                     },
-                },
-                where: {
-                    influencer_categories: {
-                        categoryID: categoryId,
+                    order: {
+                        [sortBy]: 'DESC',
                     },
-                },
-                order: {
-                    [sortBy]: 'DESC',
-                },
-                skip: offsetNumber,
-                take: limitNumber,
-            });
-            return res
-                .status(200)
-                .json({ message: 'success', result: influencerList });
+                    skip: offsetNumber,
+                    take: limitNumber,
+                }));
+            return res.status(200).json({ message: 'success', result: result });
         } else {
-            const influencerList = await Influencer.find({
-                relations: {
-                    influencer_categories: {
-                        category: true,
+            const result =
+                influencerList &&
+                (await Influencer.findAndCount({
+                    relations: {
+                        influencer_categories: {
+                            category: true,
+                        },
+                        influencer_hashtags: {
+                            hashtag: true,
+                        },
                     },
-                    influencer_hashtags: {
-                        hashtag: true,
+                    where: {
+                        id: In(influencerList),
                     },
-                },
-                where: {
-                    influencer_categories: {
-                        categoryID: categoryId,
+                    order: {
+                        [sortBy]: 'ASC',
                     },
-                },
-                order: {
-                    [sortBy]: 'ASC',
-                },
-                skip: offsetNumber,
-                take: limitNumber,
-            });
-            return res
-                .status(200)
-                .json({ message: 'success', result: influencerList });
+                    skip: offsetNumber,
+                    take: limitNumber,
+                }));
+            return res.status(200).json({ message: 'success', result: result });
         }
     }
 }
