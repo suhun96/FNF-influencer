@@ -28,7 +28,9 @@ class SearchController {
                 },
             },
         });
+        console.log(filter);
         const influencerList = filter.map(item => item.influencer.id);
+        console.log(influencerList);
         if (sortOption === 'down') {
             const result =
                 influencerList &&

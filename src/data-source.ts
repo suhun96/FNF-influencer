@@ -9,14 +9,15 @@ import { Influencer_Hashtag } from './entity/Influencer_hashtag';
 import { Message } from './entity/Message';
 import { Status } from './entity/Status';
 import { User } from './entity/User';
+require('dotenv').config();
 
 const AppDataSource = new DataSource({
     type: 'mysql',
     host: '127.0.0.1',
-    port: 3306,
-    username: 'root',
-    password: '0000',
-    database: 'influencer',
+    port: parseInt(process.env.DB_PORT),
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
     synchronize: false,
     logging: false,
     entities: [
