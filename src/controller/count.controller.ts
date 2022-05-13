@@ -39,7 +39,7 @@ class countController {
                 campaign: true,
             },
             where: {
-                statusID: 1,
+                statusID: 2,
                 campaign: {
                     userID: userId.id,
                 },
@@ -51,7 +51,7 @@ class countController {
                 campaign: true,
             },
             where: {
-                statusID: 2,
+                statusID: 3,
                 campaign: {
                     userID: userId.id,
                 },
@@ -63,7 +63,7 @@ class countController {
                 campaign: true,
             },
             where: {
-                statusID: 3,
+                statusID: 1,
                 campaign: {
                     userID: userId.id,
                 },
@@ -100,7 +100,7 @@ class countController {
                 campaign: true,
             },
             where: {
-                statusID: 1,
+                statusID: 2,
                 campaign: {
                     id: campaignId,
                 },
@@ -112,7 +112,7 @@ class countController {
                 campaign: true,
             },
             where: {
-                statusID: 3,
+                statusID: 1,
                 campaign: {
                     id: campaignId,
                 },
@@ -124,7 +124,7 @@ class countController {
                 campaign: true,
             },
             where: {
-                statusID: 2,
+                statusID: 3,
                 campaign: {
                     id: campaignId,
                 },

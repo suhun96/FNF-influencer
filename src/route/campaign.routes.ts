@@ -14,13 +14,15 @@ router.patch(
     '/update-message/:campaignid',
     wrapAsyncController(campaignController.patchCampaign)
 );
-router.delete(
-    '/deleteinfluencer/:campaignid/:influencerid',
-    wrapAsyncController(campaignController.deleteInfluencer)
-);
+
 router.delete(
     '/delete-campaign/:campaignid',
     wrapAsyncController(campaignController.deleteCampaign)
+);
+
+router.delete(
+    '/deletein-fluencer/:campaignid/:influencerid',
+    wrapAsyncController(campaignController.deleteInfluencer)
 );
 
 export default router;
