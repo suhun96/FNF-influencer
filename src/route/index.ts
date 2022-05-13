@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import userrouter from './user.routes';
 import filter from './filter.routes';
-import searchfilterrouter from './search.filter';
+import searchfilterrouter from './search.routes';
 import campaignrouter from './campaign.routes';
 import countfilter from './count.routes';
 
