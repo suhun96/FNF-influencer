@@ -215,6 +215,7 @@ class FilterController {
     }
 
     async categoryInfluencerList(req: Request, res: Response) {
+        const token = req.headers.authorization;
         const category = req.query.categoryId as string;
         const categoryId = parseInt(category);
         const sortBy = req.query.sort_by as string;
@@ -223,26 +224,99 @@ class FilterController {
         const limitNumber = parseInt(limit);
         const offset = req.query.offset as string;
         const offsetNumber = parseInt(offset);
-        const filter = await Influencer_Category.find({
-            relations: {
-                influencer: true,
-            },
-            where: {
-                category: {
-                    id: categoryId,
+        if (token !== 'null') {
+            const filter = await Influencer_Category.find({
+                relations: {
+                    influencer: true,
                 },
-            },
-            select: {
-                categoryID: true,
-                influencer: {
-                    id: true,
+                where: {
+                    category: {
+                        id: categoryId,
+                    },
                 },
-            },
-        });
-        const influencerList = filter.map(item => item.influencer.id);
-        if (sortOption === 'down') {
+                select: {
+                    categoryID: true,
+                    influencer: {
+                        id: true,
+                    },
+                },
+            });
+            const influencerList = filter.map(item => item.influencer.id);
+            if (sortOption === 'down') {
+                const result =
+                    influencerList &&
+                    (await Influencer.findAndCount({
+                        relations: {
+                            influencer_categories: {
+                                category: true,
+                            },
+                            influencer_hashtags: {
+                                hashtag: true,
+                            },
+                        },
+                        where: {
+                            id: In(influencerList),
+                        },
+                        order: {
+                            [sortBy]: 'DESC',
+                        },
+                        skip: offsetNumber,
+                        take: limitNumber,
+                    }));
+                return res
+                    .status(200)
+                    .json({ message: 'success', result: result });
+            } else {
+                const result =
+                    influencerList &&
+                    (await Influencer.findAndCount({
+                        relations: {
+                            influencer_categories: {
+                                category: true,
+                            },
+                            influencer_hashtags: {
+                                hashtag: true,
+                            },
+                        },
+                        where: {
+                            id: In(influencerList),
+                        },
+                        order: {
+                            [sortBy]: 'ASC',
+                        },
+                        skip: offsetNumber,
+                        take: limitNumber,
+                    }));
+                return res
+                    .status(200)
+                    .json({ message: 'success', result: result });
+            }
+        } else if (
+            categoryId === 1 &&
+            sortBy === 'influencer_follower' &&
+            sortOption === 'down' &&
+            limit === '5' &&
+            offset === '0'
+        ) {
+            const filter = await Influencer_Category.find({
+                relations: {
+                    influencer: true,
+                },
+                where: {
+                    category: {
+                        id: categoryId,
+                    },
+                },
+                select: {
+                    categoryID: true,
+                    influencer: {
+                        id: true,
+                    },
+                },
+            });
+            const influencerList = filter.map(item => item.influencer.id);
             const result =
-                influencerList &&
+                influencerList.length !== 0 &&
                 (await Influencer.findAndCount({
                     relations: {
                         influencer_categories: {
@@ -261,29 +335,10 @@ class FilterController {
                     skip: offsetNumber,
                     take: limitNumber,
                 }));
-            return res.status(200).json({ message: 'success', result: result });
+            console.log(result);
+            return res.status(200).send({ result: result });
         } else {
-            const result =
-                influencerList &&
-                (await Influencer.findAndCount({
-                    relations: {
-                        influencer_categories: {
-                            category: true,
-                        },
-                        influencer_hashtags: {
-                            hashtag: true,
-                        },
-                    },
-                    where: {
-                        id: In(influencerList),
-                    },
-                    order: {
-                        [sortBy]: 'ASC',
-                    },
-                    skip: offsetNumber,
-                    take: limitNumber,
-                }));
-            return res.status(200).json({ message: 'success', result: result });
+            return res.status(501).json({ message: 'Unauthorized' });
         }
     }
 }
