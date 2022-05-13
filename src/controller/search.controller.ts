@@ -34,7 +34,7 @@ class SearchController {
         if (sortOption === 'down') {
             const result =
                 influencerList &&
-                (await Influencer.find({
+                (await Influencer.findAndCount({
                     relations: {
                         influencer_categories: {
                             category: true,
@@ -59,7 +59,7 @@ class SearchController {
         } else {
             const result =
                 influencerList &&
-                (await Influencer.find({
+                (await Influencer.findAndCount({
                     relations: {
                         influencer_categories: {
                             category: true,

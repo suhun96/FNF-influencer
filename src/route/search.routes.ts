@@ -1,4 +1,4 @@
-import searchController from '../controller/search.filter';
+import searchController from '../controller/search.controller';
 import { verifyToken } from '../middleware/authtoken';
 import wrapAsyncController from '../middleware/error';
 
