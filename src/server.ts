@@ -1,5 +1,5 @@
 import * as express from 'express';
-import Routes from './route/';
+import Routes from './route';
 import 'reflect-metadata';
 import AppDataSource from './data-source';
 import { NextFunction, Request, Response } from 'express';
