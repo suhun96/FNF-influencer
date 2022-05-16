@@ -1,40 +1,44 @@
-import config from '../config/config';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { Influencer } from '../entity/Influencer';
 import { Message } from '../entity/Message';
-import { User } from '../entity/User';
-
-const jwt = require('jsonwebtoken');
+import { IGetUserAuthInfoRequest } from '../definition';
 
 class MessageController {
-    async send(req: Request, res: Response) {
-        const token = req.headers.authorization;
-        const userId = await jwt.verify(token, config.auth.secret);
+    async send(req: IGetUserAuthInfoRequest, res: Response) {
+        const brandname = req.userBrand;
         const { content, influencerIDs, campaignID } = req.body;
         const statusID = 1;
-        const newMessage = new Message();
-        const brandname = await User.find({
-            where: { id: userId.id },
-            select: { user_brandname: true },
-        });
-        newMessage.campaignID = campaignID;
-        newMessage.statusID = statusID;
-
+        brandname;
         for (const id of influencerIDs) {
             const instagramId = await Influencer.find({
                 where: { id: id },
                 select: { influencer_instagram_id: true },
             });
-            const touch_content =
-                `안녕하세요. ${instagramId[0].influencer_instagram_id}님 ${brandname[0].user_brandname}입니다.\n ` +
-                content;
+            const duplicate = await Message.find({
+                where: {
+                    campaignID: campaignID,
+                    influencerID: id,
+                },
+            });
+            if (duplicate.length > 0) {
+                return res
+                    .status(406)
+                    .send({ message: 'Already exist influencer' });
+            } else {
+                const touchContent =
+                    `안녕하세요. ${instagramId[0].influencer_instagram_id}님 ${brandname[0].user_brandname}입니다.\n ` +
+                    content;
 
-            newMessage.influencerID = id;
-            newMessage.message_content = touch_content;
-
-            Message.getRepository().save(newMessage);
+                const newMessage = new Message();
+                newMessage.campaignID = campaignID;
+                newMessage.statusID = statusID;
+                newMessage.influencerID = id;
+                newMessage.message_content = touchContent;
+                await Message.save(newMessage);
+                continue;
+            }
         }
-        res.send({ Message: 'create' });
+        return res.status(200).send({ Message: 'create' });
     }
 }
 

@@ -3,9 +3,11 @@ import { DataSource } from 'typeorm';
 import { Campaign } from './entity/Campaign';
 import { Category } from './entity/Category';
 import { Hashtag } from './entity/Hashtag';
+import { Image } from './entity/Image';
 import { Influencer } from './entity/Influencer';
 import { Influencer_Category } from './entity/Influencer_category';
 import { Influencer_Hashtag } from './entity/Influencer_hashtag';
+import { Influencer_Image } from './entity/Influencer_image';
 import { Message } from './entity/Message';
 import { Status } from './entity/Status';
 import { User } from './entity/User';
@@ -28,8 +30,10 @@ const AppDataSource = new DataSource({
         Influencer,
         Influencer_Category,
         Influencer_Hashtag,
+        Influencer_Image,
         Category,
         Hashtag,
+        Image,
     ],
     migrations: ['src/migration/*{.ts,.js}'],
 });

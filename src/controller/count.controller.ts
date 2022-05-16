@@ -1,74 +1,14 @@
-import { Request, Response } from 'express';
-import { Campaign } from '../entity/Campaign';
-import { Message } from '../entity/Message';
-import { User } from '../entity/User';
-import config from '../config/config';
-
-const jwt = require('jsonwebtoken');
+import { Response } from 'express';
+import { IGetUserAuthInfoRequest } from '../definition';
 
 class countController {
-    async totalInfluencerCount(req: Request, res: Response) {
-        const token = req.headers.authorization;
-        const userId = await jwt.verify(token, config.auth.secret);
-        const userBrand = await User.findOne({
-            select: ['user_brandname'],
-            where: {
-                id: userId.id,
-            },
-        });
-
-        const campaignCount = await Campaign.count({
-            where: {
-                userID: userId.id,
-            },
-        });
-
-        const totalRequest = await Message.count({
-            relations: {
-                campaign: true,
-            },
-            where: {
-                campaign: {
-                    userID: userId.id,
-                },
-            },
-        });
-
-        const totalAccept = await Message.count({
-            relations: {
-                campaign: true,
-            },
-            where: {
-                statusID: 2,
-                campaign: {
-                    userID: userId.id,
-                },
-            },
-        });
-
-        const totalReject = await Message.count({
-            relations: {
-                campaign: true,
-            },
-            where: {
-                statusID: 3,
-                campaign: {
-                    userID: userId.id,
-                },
-            },
-        });
-
-        const totalWait = await Message.count({
-            relations: {
-                campaign: true,
-            },
-            where: {
-                statusID: 1,
-                campaign: {
-                    userID: userId.id,
-                },
-            },
-        });
+    async totalInfluencerCount(req: IGetUserAuthInfoRequest, res: Response) {
+        const userBrand = req.userBrand;
+        const campaignCount = req.campaignCount;
+        const totalRequest = req.totalRequest;
+        const totalAccept = req.totalAccept;
+        const totalReject = req.totalReject;
+        const totalWait = req.totalWait;
         return res.status(200).send({
             message: 'success',
             result: {
@@ -82,54 +22,11 @@ class countController {
         });
     }
 
-    async campaignInfluencerCount(req: Request, res: Response) {
-        const campaignId = parseInt(req.params.campaignId);
-        const totalCount = await Message.count({
-            relations: {
-                campaign: true,
-            },
-            where: {
-                campaign: {
-                    id: campaignId,
-                },
-            },
-        });
-
-        const acceptCount = await Message.count({
-            relations: {
-                campaign: true,
-            },
-            where: {
-                statusID: 2,
-                campaign: {
-                    id: campaignId,
-                },
-            },
-        });
-
-        const waitCount = await Message.count({
-            relations: {
-                campaign: true,
-            },
-            where: {
-                statusID: 1,
-                campaign: {
-                    id: campaignId,
-                },
-            },
-        });
-
-        const rejectCount = await Message.count({
-            relations: {
-                campaign: true,
-            },
-            where: {
-                statusID: 3,
-                campaign: {
-                    id: campaignId,
-                },
-            },
-        });
+    async campaignInfluencerCount(req: IGetUserAuthInfoRequest, res: Response) {
+        const totalCount = req.totalCount;
+        const acceptCount = req.acceptCount;
+        const waitCount = req.waitCount;
+        const rejectCount = req.rejectCount;
         return res.status(200).send({
             message: 'Success',
             result: {
