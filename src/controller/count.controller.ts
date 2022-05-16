@@ -10,7 +10,7 @@ class countController {
         const totalReject = req.totalReject;
         const totalWait = req.totalWait;
         return res.status(200).send({
-            message: 'success',
+            message: 'Success',
             result: {
                 brand: userBrand.user_brandname,
                 campaignCount: campaignCount,

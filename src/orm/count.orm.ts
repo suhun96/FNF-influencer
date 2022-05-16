@@ -13,61 +13,41 @@ class CountOrmController {
         const userId = req.userId;
         const userBrand = await User.findOne({
             select: ['user_brandname'],
-            where: {
-                id: userId.id,
-            },
+            where: { id: userId.id },
         });
 
         const campaignCount = await Campaign.count({
-            where: {
-                userID: userId.id,
-            },
+            where: { userID: userId.id },
         });
 
         const totalRequest = await Message.count({
-            relations: {
-                campaign: true,
-            },
+            relations: { campaign: true },
             where: {
-                campaign: {
-                    userID: userId.id,
-                },
+                campaign: { userID: userId.id },
             },
         });
 
         const totalAccept = await Message.count({
-            relations: {
-                campaign: true,
-            },
+            relations: { campaign: true },
             where: {
                 statusID: 2,
-                campaign: {
-                    userID: userId.id,
-                },
+                campaign: { userID: userId.id },
             },
         });
 
         const totalReject = await Message.count({
-            relations: {
-                campaign: true,
-            },
+            relations: { campaign: true },
             where: {
                 statusID: 3,
-                campaign: {
-                    userID: userId.id,
-                },
+                campaign: { userID: userId.id },
             },
         });
 
         const totalWait = await Message.count({
-            relations: {
-                campaign: true,
-            },
+            relations: { campaign: true },
             where: {
                 statusID: 1,
-                campaign: {
-                    userID: userId.id,
-                },
+                campaign: { userID: userId.id },
             },
         });
         req.userBrand = userBrand;
@@ -86,49 +66,33 @@ class CountOrmController {
     ) {
         const campaignId = parseInt(req.params.campaignId);
         const totalCount = await Message.count({
-            relations: {
-                campaign: true,
-            },
+            relations: { campaign: true },
             where: {
-                campaign: {
-                    id: campaignId,
-                },
+                campaign: { id: campaignId },
             },
         });
 
         const acceptCount = await Message.count({
-            relations: {
-                campaign: true,
-            },
+            relations: { campaign: true },
             where: {
                 statusID: 2,
-                campaign: {
-                    id: campaignId,
-                },
+                campaign: { id: campaignId },
             },
         });
 
         const waitCount = await Message.count({
-            relations: {
-                campaign: true,
-            },
+            relations: { campaign: true },
             where: {
                 statusID: 1,
-                campaign: {
-                    id: campaignId,
-                },
+                campaign: { id: campaignId },
             },
         });
 
         const rejectCount = await Message.count({
-            relations: {
-                campaign: true,
-            },
+            relations: { campaign: true },
             where: {
                 statusID: 3,
-                campaign: {
-                    id: campaignId,
-                },
+                campaign: { id: campaignId },
             },
         });
         req.totalCount = totalCount;

@@ -14,7 +14,7 @@ class UserController {
         myUser.user_brandname = brandname;
         myUser.user_password = bcrypt.hashSync(password, 10);
         await User.getRepository().save(myUser);
-        return res.status(201).send({ message: 'success', result: myUser });
+        return res.status(201).send({ message: 'Success', result: myUser });
     }
 
     async checkUserEmail(req: Request, res: Response) {
@@ -25,9 +25,9 @@ class UserController {
             },
         });
         if (user) {
-            return res.status(404).send({ message: 'already_exist_email' });
+            return res.status(404).send({ message: 'Already exist email' });
         } else {
-            return res.status(200).send({ message: 'success' });
+            return res.status(200).send({ message: 'Success' });
         }
     }
 
@@ -36,7 +36,7 @@ class UserController {
         const token = jwt.sign({ id: user.id }, config.auth.secret, {
             expiresIn: '15d',
         });
-        return res.status(200).send({ message: 'login_success', token: token });
+        return res.status(200).send({ message: 'Login success', token: token });
     }
 }
 

@@ -14,19 +14,13 @@ export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({
-        length: 100,
-    })
+    @Column({ length: 100 })
     user_email: string;
 
-    @Column({
-        length: 200,
-    })
+    @Column({ length: 200 })
     user_password: string;
 
-    @Column({
-        length: 50,
-    })
+    @Column({ length: 50 })
     user_brandname: string;
 
     @OneToMany(() => Campaign, campaign => campaign.user, {

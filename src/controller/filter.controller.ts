@@ -6,7 +6,7 @@ class FilterController {
         const userCampaignList = req.campaign;
         return res
             .status(200)
-            .send({ message: 'success', result: userCampaignList });
+            .send({ message: 'Success', result: userCampaignList });
     }
 
     async campaignStatusInfluencerList(
@@ -26,7 +26,7 @@ class FilterController {
             influencerListUp;
             return res
                 .status(200)
-                .send({ message: 'influencerList', result: influencerListUp });
+                .send({ message: 'InfluencerList', result: influencerListUp });
         }
     }
 
@@ -41,59 +41,62 @@ class FilterController {
             influencerListDown;
             return res
                 .status(200)
-                .json({ message: 'influenceList', result: influencerListDown });
+                .json({ message: 'Success', result: influencerListDown });
         } else {
             influencerListUp;
             return res
                 .status(200)
-                .send({ message: 'influencerList', result: influencerListUp });
+                .send({ message: 'Success', result: influencerListUp });
         }
     }
 
     async categoryList(req: IGetUserAuthInfoRequest, res: Response) {
         const categoryList = req.categoryList;
         res.status(200).json({
-            message: 'categoryList',
+            message: 'Success',
             result: categoryList,
         });
     }
 
     async categoryInfluencerList(req: IGetUserAuthInfoRequest, res: Response) {
-        const token = req.headers.authorization;
         const influencerList = req.influencerList;
         const sortOption = req.sortOption;
         const influencerListDown = req.influencerListDown;
         const influencerListUp = req.influencerListUp;
-        const categoryId = req.categoryId;
-        const sortBy = req.sortBy;
-        const limitNumber = req.limitNumber;
-        const offsetNumber = req.offsetNumber;
-        if (token !== 'null') {
-            influencerList;
-            if (sortOption === 'down') {
-                influencerListDown;
-                return res
-                    .status(200)
-                    .json({ message: 'success', result: influencerListDown });
-            } else {
-                influencerListUp;
-                return res
-                    .status(200)
-                    .json({ message: 'success', result: influencerListUp });
-            }
-        } else if (
-            categoryId === 1 &&
-            sortBy === 'influencer_follower' &&
-            sortOption === 'down' &&
-            limitNumber === 5 &&
-            offsetNumber === 0
-        ) {
-            influencerList;
+        influencerList;
+        if (sortOption === 'down') {
             influencerListDown;
-            return res.status(200).send({ result: influencerListDown });
+            return res
+                .status(200)
+                .json({ message: 'Success', result: influencerListDown });
         } else {
-            return res.status(501).json({ message: 'Unauthorized' });
+            influencerListUp;
+            return res
+                .status(200)
+                .json({ message: 'Success', result: influencerListUp });
         }
+    }
+
+    async mainInfluencerList(req: IGetUserAuthInfoRequest, res: Response) {
+        const influencerList = req.influencerList;
+        const influencerListDown = req.influencerListDown;
+        const influencerIdList = req.influencerIdList;
+        influencerList;
+        influencerIdList;
+        influencerListDown;
+        return res
+            .status(200)
+            .json({ message: 'Success', result: influencerListDown });
+    }
+
+    async influencerImageList(req: IGetUserAuthInfoRequest, res: Response) {
+        const imageList = req.imageList;
+        const influencer = req.influencer;
+        imageList;
+        influencer;
+        return res
+            .status(200)
+            .send({ message: 'Success', result: influencer, imageList });
     }
 }
 

@@ -26,4 +26,13 @@ export interface IGetUserAuthInfoRequest extends Request {
     influencerList: any;
     categoryId: any;
     sortBy: any;
+    influencerIdList: any;
+    influencerList1: any;
+    influencerList2: any;
+    influencerIdList1: any;
+    influencerIdList2: any;
+    influencerIdList3: any;
+    content: any;
+    imageList: any;
+    influencer: any;
 }

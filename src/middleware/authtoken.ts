@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
-import config from '../config/config';
 import { IGetUserAuthInfoRequest } from '../definition';
+import config from '../config/config';
 
 const jwt = require('jsonwebtoken');
 class TokenController {

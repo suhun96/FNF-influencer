@@ -17,10 +17,7 @@ export class Message extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({
-        length: 500,
-        nullable: true,
-    })
+    @Column({ length: 500, nullable: true })
     message_content: string;
 
     @Column({ name: 'influencerID' })
