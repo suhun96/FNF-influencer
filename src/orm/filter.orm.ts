@@ -3,11 +3,13 @@ import { In } from 'typeorm';
 import { IGetUserAuthInfoRequest } from '../definition';
 import { Campaign } from '../entity/Campaign';
 import { Category } from '../entity/Category';
+import { Image } from '../entity/Image';
 import { Influencer } from '../entity/Influencer';
 import { Influencer_Category } from '../entity/Influencer_category';
+import { Influencer_Image } from '../entity/Influencer_image';
 
 class FilterOrmController {
-    async userCampaignListOrm(
+    async findUserCampaignList(
         req: IGetUserAuthInfoRequest,
         res: Response,
         next: NextFunction
@@ -28,7 +30,7 @@ class FilterOrmController {
         return next();
     }
 
-    async campaignStatusInfluencerListOrm(
+    async findCampaignStatusInfluencerList(
         req: IGetUserAuthInfoRequest,
         res: Response,
         next: NextFunction
@@ -96,7 +98,7 @@ class FilterOrmController {
         return next();
     }
 
-    async campaignTotalStatusInfluencerListOrm(
+    async findCampaignTotalStatusInfluencerList(
         req: IGetUserAuthInfoRequest,
         res: Response,
         next: NextFunction
@@ -160,7 +162,7 @@ class FilterOrmController {
         return next();
     }
 
-    async categoryListOrm(
+    async findCategoryList(
         req: IGetUserAuthInfoRequest,
         res: Response,
         next: NextFunction
@@ -172,7 +174,7 @@ class FilterOrmController {
         return next();
     }
 
-    async categoryInfluencerListOrm(
+    async findAndCountCategoryInfluencerList(
         req: IGetUserAuthInfoRequest,
         res: Response,
         next: NextFunction
@@ -186,19 +188,13 @@ class FilterOrmController {
         const offset = req.query.offset as string;
         const offsetNumber = parseInt(offset);
         const influencerList = await Influencer_Category.find({
-            relations: {
-                influencer: true,
-            },
+            relations: { influencer: true },
             where: {
-                category: {
-                    id: categoryId,
-                },
+                category: { id: categoryId },
             },
             select: {
                 categoryID: true,
-                influencer: {
-                    id: true,
-                },
+                influencer: { id: true },
             },
         });
         const influencerIdList = influencerList.map(item => item.influencer.id);
@@ -206,19 +202,11 @@ class FilterOrmController {
             influencerList &&
             (await Influencer.findAndCount({
                 relations: {
-                    influencer_categories: {
-                        category: true,
-                    },
-                    influencer_hashtags: {
-                        hashtag: true,
-                    },
+                    influencer_categories: { category: true },
+                    influencer_hashtags: { hashtag: true },
                 },
-                where: {
-                    id: In(influencerIdList),
-                },
-                order: {
-                    [sortBy]: 'DESC',
-                },
+                where: { id: In(influencerIdList) },
+                order: { [sortBy]: 'DESC' },
                 skip: offsetNumber,
                 take: limitNumber,
             }));
@@ -226,19 +214,11 @@ class FilterOrmController {
             influencerList &&
             (await Influencer.findAndCount({
                 relations: {
-                    influencer_categories: {
-                        category: true,
-                    },
-                    influencer_hashtags: {
-                        hashtag: true,
-                    },
+                    influencer_categories: { category: true },
+                    influencer_hashtags: { hashtag: true },
                 },
-                where: {
-                    id: In(influencerIdList),
-                },
-                order: {
-                    [sortBy]: 'ASC',
-                },
+                where: { id: In(influencerIdList) },
+                order: { [sortBy]: 'ASC' },
                 skip: offsetNumber,
                 take: limitNumber,
             }));
@@ -250,6 +230,68 @@ class FilterOrmController {
         req.sortBy = sortBy;
         req.limitNumber = limitNumber;
         req.offsetNumber = offsetNumber;
+        return next();
+    }
+
+    async mainInfluencerList(
+        req: IGetUserAuthInfoRequest,
+        res: Response,
+        next: NextFunction
+    ) {
+        const influencerList = await Influencer_Category.find({
+            relations: { influencer: true },
+            where: {
+                category: { id: 1 },
+            },
+            select: {
+                categoryID: true,
+                influencer: { id: true },
+            },
+        });
+        const influencerIdList = influencerList.map(item => item.influencer.id);
+        const influencerListDown =
+            influencerList &&
+            (await Influencer.findAndCount({
+                relations: {
+                    influencer_categories: { category: true },
+                    influencer_hashtags: { hashtag: true },
+                },
+                where: { id: In(influencerIdList) },
+                order: { influencer_follower: 'DESC' },
+                skip: 0,
+                take: 5,
+            }));
+        req.influencerList = influencerList;
+        req.influencerIdList = influencerIdList;
+        req.influencerListDown = influencerListDown;
+        return next();
+    }
+    async findInfluencerImageList(
+        req: IGetUserAuthInfoRequest,
+        res: Response,
+        next: NextFunction
+    ) {
+        const influencerId = parseInt(req.params.influencerId);
+        const imageList = await Image.find({
+            relations: { influencer_images: true },
+            where: {
+                influencer_images: { influencerID: influencerId },
+            },
+            select: ['image_url'],
+        });
+        const influencer = await Influencer.find({
+            where: { id: influencerId },
+            select: [
+                'influencer_follower',
+                'influencer_images',
+                'influencer_instagram_id',
+                'influencer_posting',
+                'influencer_average_like',
+                'influencer_average_comment',
+            ],
+        });
+        req.imageList = imageList;
+        req.influencer = influencer;
         return next();
     }
 }

@@ -16,9 +16,7 @@ export class Campaign extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({
-        length: 100,
-    })
+    @Column({ length: 100 })
     campaign_name: string;
 
     @Column({ name: 'userID' })

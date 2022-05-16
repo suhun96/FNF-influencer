@@ -11,14 +11,14 @@ class SearchController {
         if (sortOption === 'down') {
             influencerListDown;
             return res.status(200).send({
-                message: 'success',
+                message: 'Success',
                 influencerList: influencerListDown,
             });
         } else {
             influencerListUp;
             return res
                 .status(200)
-                .send({ message: 'success', influencerList: influencerListUp });
+                .send({ message: 'Success', influencerList: influencerListUp });
         }
     }
 }

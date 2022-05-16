@@ -18,19 +18,13 @@ class SearchOrmController {
         const offsetNumber = parseInt(offset);
         const sortOption = req.query.sort_option as string;
         const influencerList = await Influencer_Hashtag.find({
-            relations: {
-                influencer: true,
-            },
+            relations: { influencer: true },
             where: {
-                hashtag: {
-                    hashtag_name: key,
-                },
+                hashtag: { hashtag_name: key },
             },
             select: {
                 hashtagID: true,
-                influencer: {
-                    id: true,
-                },
+                influencer: { id: true },
             },
         });
         const influencerIdList = influencerList.map(item => item.influencer.id);
@@ -38,19 +32,11 @@ class SearchOrmController {
             influencerList &&
             (await Influencer.findAndCount({
                 relations: {
-                    influencer_categories: {
-                        category: true,
-                    },
-                    influencer_hashtags: {
-                        hashtag: true,
-                    },
+                    influencer_categories: { category: true },
+                    influencer_hashtags: { hashtag: true },
                 },
-                where: {
-                    id: In(influencerIdList),
-                },
-                order: {
-                    [sortBy]: 'DESC',
-                },
+                where: { id: In(influencerIdList) },
+                order: { [sortBy]: 'DESC' },
                 skip: offsetNumber,
                 take: limitNumber,
             }));
@@ -58,19 +44,11 @@ class SearchOrmController {
             influencerList &&
             (await Influencer.findAndCount({
                 relations: {
-                    influencer_categories: {
-                        category: true,
-                    },
-                    influencer_hashtags: {
-                        hashtag: true,
-                    },
+                    influencer_categories: { category: true },
+                    influencer_hashtags: { hashtag: true },
                 },
-                where: {
-                    id: In(influencerIdList),
-                },
-                order: {
-                    [sortBy]: 'ASC',
-                },
+                where: { id: In(influencerIdList) },
+                order: { [sortBy]: 'ASC' },
                 skip: offsetNumber,
                 take: limitNumber,
             }));

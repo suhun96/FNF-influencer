@@ -1,7 +1,7 @@
 import { NextFunction, Response } from 'express';
 import { User } from '../entity/User';
-import * as bcrypt from 'bcrypt';
 import { IGetUserAuthInfoRequest } from '../definition';
+import * as bcrypt from 'bcrypt';
 
 export const checkUserPassword = (
     req: IGetUserAuthInfoRequest,

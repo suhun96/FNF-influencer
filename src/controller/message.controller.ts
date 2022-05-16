@@ -5,40 +5,47 @@ import { IGetUserAuthInfoRequest } from '../definition';
 
 class MessageController {
     async send(req: IGetUserAuthInfoRequest, res: Response) {
-        const brandname = req.userBrand;
-        const { content, influencerIDs, campaignID } = req.body;
+        const content = req.content;
+        const campaignId = req.campaignId;
+        const influencerList1 = req.influencerList1;
+        const influencerList2 = req.influencerList2;
+        const influencerIdList1 = req.influencerIdList1;
+        const influencerIdList2 = req.influencerIdList2;
+        const influencerIdList3 = req.influencerIdList3;
         const statusID = 1;
-        brandname;
-        for (const id of influencerIDs) {
-            const instagramId = await Influencer.find({
-                where: { id: id },
-                select: { influencer_instagram_id: true },
-            });
-            const duplicate = await Message.find({
-                where: {
-                    campaignID: campaignID,
-                    influencerID: id,
-                },
-            });
-            if (duplicate.length > 0) {
-                return res
-                    .status(406)
-                    .send({ message: 'Already exist influencer' });
-            } else {
-                const touchContent =
-                    `안녕하세요. ${instagramId[0].influencer_instagram_id}님 ${brandname[0].user_brandname}입니다.\n ` +
-                    content;
-
+        const brandname = req.userBrand;
+        influencerList1;
+        influencerList2;
+        influencerIdList1;
+        influencerIdList2;
+        if (
+            influencerIdList1.length > 0 &&
+            influencerIdList2.length > 0 &&
+            influencerIdList3.length === 0
+        ) {
+            return res
+                .status(406)
+                .send({ message: 'Already exist influencer' });
+        } else {
+            for (const id of influencerIdList3) {
+                const influencer = await Influencer.findOne({
+                    where: {
+                        id: id,
+                    },
+                });
                 const newMessage = new Message();
-                newMessage.campaignID = campaignID;
+                const touchContent =
+                    `안녕하세요. ${influencer.influencer_instagram_id}님 ${brandname.user_brandname}입니다.\n ` +
+                    content;
+                newMessage.campaignID = campaignId;
                 newMessage.statusID = statusID;
-                newMessage.influencerID = id;
+                newMessage.influencerID = influencer.id;
                 newMessage.message_content = touchContent;
                 await Message.save(newMessage);
                 continue;
             }
         }
-        return res.status(200).send({ Message: 'create' });
+        return res.status(200).send({ Message: 'Success' });
     }
 }
 
