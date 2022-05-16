@@ -7,21 +7,21 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Influencer_Hashtag } from './Influencer_hashtag';
+import { Influencer_Image } from './Influencer_image';
 
 @Entity()
-export class Hashtag extends BaseEntity {
+export class Image extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 100 })
-    hashtag_name: string;
+    @Column()
+    image_url: string;
 
     @OneToMany(
-        () => Influencer_Hashtag,
-        influencer_hashtag => influencer_hashtag.hashtag
+        () => Influencer_Image,
+        influencer_image => influencer_image.image
     )
-    influencer_hashtags: Influencer_Hashtag[];
+    influencer_images: Influencer_Image[];
 
     @CreateDateColumn()
     created_at: Date;

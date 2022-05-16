@@ -1,22 +1,16 @@
-import { NextFunction, Request, Response } from 'express';
+import { Response } from 'express';
 import { Campaign } from '../entity/Campaign';
 import { Message } from '../entity/Message';
-import config from '../config/config';
+import { IGetUserAuthInfoRequest } from '../definition';
 const jwt = require('jsonwebtoken');
 
 class CampaignController {
-    async createCampaign(req: Request, res: Response) {
-        var token = req.headers.authorization;
-        const userId = await jwt.verify(token, config.auth.secret);
-        const { campaignName } = req.body;
-        const myCampaign = new Campaign();
-        const campaign = await Campaign.findOne({
-            where: {
-                userID: userId.id,
-                campaign_name: campaignName,
-            },
-        });
+    async createCampaign(req: IGetUserAuthInfoRequest, res: Response) {
+        const userId = req.userId;
+        const campaign = req.campaignOne;
+        const campaignName = req.campaignName;
         if (campaign === null) {
+            const myCampaign = new Campaign();
             myCampaign.userID = userId.id;
             myCampaign.campaign_name = campaignName;
             Campaign.getRepository().save(myCampaign);
@@ -26,71 +20,68 @@ class CampaignController {
         }
     }
 
-    async patchCampaign(req: Request, res: Response) {
-        const token = req.headers.authorization;
-        const userId = await jwt.verify(token, config.auth.secret);
-        const { campaignName } = req.body;
-        const campaignId = parseInt(req.params.campaignid);
-        const myMessage = await Campaign.findOne({
-            where: {
-                id: campaignId,
-                userID: userId.id,
-            },
-        });
-        console.log(myMessage);
-        myMessage.campaign_name = campaignName;
-        await Campaign.save(myMessage);
-        return res.status(200).send({ message: 'Patch success' });
+    async patchCampaign(req: IGetUserAuthInfoRequest, res: Response) {
+        const userId = req.userId;
+        const campaign = req.campaign;
+        const campaignOne = req.campaignOne;
+        const campaignName = req.campaignName;
+        campaignOne;
+        if (campaignOne === null) {
+            campaign;
+            if (campaign !== null) {
+                campaign.userID = userId;
+                campaign.campaign_name = campaignName;
+                await Campaign.save(campaign);
+                return res.status(200).send({ message: 'Patch success' });
+            } else {
+                return res
+                    .status(406)
+                    .send({ message: 'Campaign does not exist' });
+            }
+        } else {
+            return res
+                .status(407)
+                .send({ message: 'Already exist campaign name' });
+        }
     }
 
-    async deleteCampaign(req: Request, res: Response) {
-        const token = req.headers.authorization;
-        const userId = await jwt.verify(token, config.auth.secret);
-        const campaignId = parseInt(req.params.campaignid);
-        const myCampaign = await Campaign.find({
-            where: {
-                id: campaignId,
-                userID: userId.id,
-            },
-        });
-        if (myCampaign.length !== 0) {
-            const myMessage = await Message.find({
-                relations: {
-                    campaign: true,
-                },
-                where: {
-                    campaignID: campaignId,
-                    campaign: {
-                        userID: userId.id,
-                    },
-                },
-            });
-            await Message.remove(myMessage);
-            await Campaign.remove(myCampaign);
+    async deleteCampaign(req: IGetUserAuthInfoRequest, res: Response) {
+        const campaign = req.campaign;
+        const message = req.message;
+        if (campaign !== null) {
+            message;
+            await Message.remove(message);
+            await Campaign.remove(campaign);
             return res.status(200).send({ message: 'Delete success' });
         } else {
             return res.status(400).send({ message: 'Unauthorized' });
         }
     }
 
-    async deleteInfluencer(req: Request, res: Response) {
-        const token = req.headers.authorization;
-        const userId = await jwt.verify(token, config.auth.secret);
-        const campaignId = parseInt(req.params.campaignid);
-        const influencerId = parseInt(req.params.influencerid);
-        const myMessage = await Message.find({
-            relations: {
-                campaign: true,
-            },
-            where: {
-                campaignID: campaignId,
-                influencerID: influencerId,
-                campaign: {
-                    userID: userId,
+    async deleteInfluencer(req: IGetUserAuthInfoRequest, res: Response) {
+        const userId = req.userId;
+        const campaignId = req.campaignId;
+        const { influencerId } = req.body;
+        for (const id of influencerId) {
+            const message = await Message.find({
+                relations: {
+                    campaign: true,
                 },
-            },
-        });
-        await Message.remove(myMessage);
+                where: {
+                    influencerID: id,
+                    campaign: {
+                        id: campaignId,
+                        userID: userId.id,
+                    },
+                },
+            });
+            if (message.length > 0) {
+                await Message.remove(message);
+                continue;
+            } else {
+                return res.status(405).send({ message: 'Unauthorized' });
+            }
+        }
         return res.status(200).send({ message: 'Delete success' });
     }
 }

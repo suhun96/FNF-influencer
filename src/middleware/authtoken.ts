@@ -1,14 +1,24 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
+import config from '../config/config';
+import { IGetUserAuthInfoRequest } from '../definition';
 
-export const verifyToken = (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    const token = req.headers.authorization;
-    if (token) {
-        next();
-    } else {
-        return res.status(403).send({ message: 'unauthorized' });
+const jwt = require('jsonwebtoken');
+class TokenController {
+    async verifyToken(
+        req: IGetUserAuthInfoRequest,
+        res: Response,
+        next: NextFunction
+    ) {
+        const token = req.headers.authorization;
+        const userId = await jwt.verify(token, config.auth.secret);
+        if (token) {
+            req.userId = userId;
+            next();
+        } else {
+            return res.status(403).send({ message: 'unauthorized' });
+        }
     }
-};
+}
+
+const tokenController = new TokenController();
+export default tokenController;

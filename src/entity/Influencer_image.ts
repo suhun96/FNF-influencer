@@ -6,33 +6,32 @@ import {
     OneToMany,
     CreateDateColumn,
     UpdateDateColumn,
-    ManyToMany,
     ManyToOne,
     JoinColumn,
 } from 'typeorm';
 import { Influencer } from './Influencer';
-import { Category } from './Category';
+import { Image } from './Image';
 
 @Entity()
-export class Influencer_Category extends BaseEntity {
+export class Influencer_Image extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ name: 'influencerID' })
     influencerID: number;
 
-    @Column({ name: 'categoryID' })
-    categoryID: number;
+    @Column({ name: 'imageID' })
+    imageID: number;
 
-    @ManyToOne(() => Influencer, influencer => influencer.influencer_categories)
+    @ManyToOne(() => Influencer, influencer => influencer.influencer_images)
     @JoinColumn({ name: 'influencerID' })
     influencer: Influencer;
 
-    @ManyToOne(() => Category, category => category.influencer_categories, {
+    @ManyToOne(() => Image, image => image.influencer_images, {
         onDelete: 'CASCADE',
     })
-    @JoinColumn({ name: 'categoryID' })
-    category: Category;
+    @JoinColumn({ name: 'imageID' })
+    image: Image;
 
     @CreateDateColumn()
     created_at: Date;

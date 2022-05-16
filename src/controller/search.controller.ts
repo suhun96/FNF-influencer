@@ -1,83 +1,24 @@
-import { Request, Response } from 'express';
-import { Influencer } from '../entity/Influencer';
-import { In } from 'typeorm';
-import { Influencer_Hashtag } from '../entity/Influencer_hashtag';
+import { Response } from 'express';
+import { IGetUserAuthInfoRequest } from '../definition';
 
 class SearchController {
-    async search(req: Request, res: Response) {
-        const sortBy = req.query.sort_by as string;
-        const sortOption = req.query.sort_option as string;
-        const limit = req.query.limit as string;
-        const limitNumber = parseInt(limit);
-        const offset = req.query.offset as string;
-        const offsetNumber = parseInt(offset);
-        const key = req.query.key as string;
-        const filter = await Influencer_Hashtag.find({
-            relations: {
-                influencer: true,
-            },
-            where: {
-                hashtag: {
-                    hashtag_name: key,
-                },
-            },
-            select: {
-                hashtagID: true,
-                influencer: {
-                    id: true,
-                },
-            },
-        });
-        const influencerList = filter.map(item => item.influencer.id);
+    async search(req: IGetUserAuthInfoRequest, res: Response) {
+        const sortOption = req.sortOption;
+        const influencerList = req.influencerList;
+        const influencerListDown = req.influencerListDown;
+        const influencerListUp = req.influencerListUp;
+        influencerList;
         if (sortOption === 'down') {
-            const result =
-                influencerList &&
-                (await Influencer.findAndCount({
-                    relations: {
-                        influencer_categories: {
-                            category: true,
-                        },
-                        influencer_hashtags: {
-                            hashtag: true,
-                        },
-                    },
-                    where: {
-                        id: In(influencerList),
-                    },
-                    order: {
-                        [sortBy]: 'DESC',
-                    },
-                    skip: offsetNumber,
-                    take: limitNumber,
-                }));
-            console.log(result);
-            return res
-                .status(200)
-                .send({ message: 'success', influencerList: result });
+            influencerListDown;
+            return res.status(200).send({
+                message: 'success',
+                influencerList: influencerListDown,
+            });
         } else {
-            const result =
-                influencerList &&
-                (await Influencer.findAndCount({
-                    relations: {
-                        influencer_categories: {
-                            category: true,
-                        },
-                        influencer_hashtags: {
-                            hashtag: true,
-                        },
-                    },
-                    where: {
-                        id: In(influencerList),
-                    },
-                    order: {
-                        [sortBy]: 'ASC',
-                    },
-                    skip: offsetNumber,
-                    take: limitNumber,
-                }));
+            influencerListUp;
             return res
                 .status(200)
-                .send({ message: 'success', influencerList: result });
+                .send({ message: 'success', influencerList: influencerListUp });
         }
     }
 }
