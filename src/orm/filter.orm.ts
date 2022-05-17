@@ -25,6 +25,8 @@ class FilterOrmController {
             skip: offsetNumber,
             take: limitNumber,
         });
+
+        console.log(userId, offsetNumber, limitNumber);
         req.campaign = userCampaignList;
         next();
     }

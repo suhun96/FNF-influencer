@@ -1,6 +1,6 @@
 import { Request } from 'express';
 export interface IGetUserAuthInfoRequest extends Request {
-    user: object;
+    user: any;
     userId: number;
     campaign: object;
     campaignName: string;
@@ -28,9 +28,9 @@ export interface IGetUserAuthInfoRequest extends Request {
     influencerIdList2: Array<number>;
     // 수훈
     messageId: number;
-    influencerId : number;
-    instagramId : string;
+    influencerId: number;
+    instagramId: string;
     campaignOne: any;
-    statusId : number;
+    statusId: number;
     message: any;
 }
