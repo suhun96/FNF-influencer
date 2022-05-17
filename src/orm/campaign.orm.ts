@@ -12,11 +12,11 @@ class CampaignOrmController {
         const userId = req.userId;
         const { campaignName } = req.body;
         const campaign = await Campaign.findOne({
-            where: { userID: userId.id, campaign_name: campaignName },
+            where: { userID: userId, campaign_name: campaignName },
         });
-        req.campaignOne = campaign;
+        req.campaign = campaign;
         req.campaignName = campaignName;
-        return next();
+        next();
     }
 
     async findCampiagnWithCampaignId(
@@ -28,11 +28,11 @@ class CampaignOrmController {
         const { campaignName } = req.body;
         const campaignId = parseInt(req.params.campaignid);
         const campaign = await Campaign.findOne({
-            where: { id: campaignId, userID: userId.id },
+            where: { id: campaignId, userID: userId },
         });
-        req.campaign = campaign;
+        req.campaignOne = campaign;
         req.campaignName = campaignName;
-        return next();
+        next();
     }
 
     async findMessageWithCampaignId(
@@ -46,11 +46,11 @@ class CampaignOrmController {
             relations: { campaign: true },
             where: {
                 campaignID: campaignId,
-                campaign: { userID: userId.id },
+                campaign: { userID: userId },
             },
         });
         req.message = message;
-        return next();
+        next();
     }
 }
 

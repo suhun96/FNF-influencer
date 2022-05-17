@@ -28,35 +28,30 @@ class SearchOrmController {
             },
         });
         const influencerIdList = influencerList.map(item => item.influencer.id);
-        const influencerListDown =
-            influencerList &&
-            (await Influencer.findAndCount({
-                relations: {
-                    influencer_categories: { category: true },
-                    influencer_hashtags: { hashtag: true },
-                },
-                where: { id: In(influencerIdList) },
-                order: { [sortBy]: 'DESC' },
-                skip: offsetNumber,
-                take: limitNumber,
-            }));
-        const influencerListUp =
-            influencerList &&
-            (await Influencer.findAndCount({
-                relations: {
-                    influencer_categories: { category: true },
-                    influencer_hashtags: { hashtag: true },
-                },
-                where: { id: In(influencerIdList) },
-                order: { [sortBy]: 'ASC' },
-                skip: offsetNumber,
-                take: limitNumber,
-            }));
+        const influencerListDown = await Influencer.findAndCount({
+            relations: {
+                influencer_categories: { category: true },
+                influencer_hashtags: { hashtag: true },
+            },
+            where: { id: In(influencerIdList) },
+            order: { [sortBy]: 'DESC' },
+            skip: offsetNumber,
+            take: limitNumber,
+        });
+        const influencerListUp = await Influencer.findAndCount({
+            relations: {
+                influencer_categories: { category: true },
+                influencer_hashtags: { hashtag: true },
+            },
+            where: { id: In(influencerIdList) },
+            order: { [sortBy]: 'ASC' },
+            skip: offsetNumber,
+            take: limitNumber,
+        });
         req.influencerListUp = influencerListUp;
         req.influencerListDown = influencerListDown;
-        req.influencerList = influencerList;
         req.sortOption = sortOption;
-        return next();
+        next();
     }
 }
 

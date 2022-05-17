@@ -7,27 +7,23 @@ class MessageController {
     async send(req: IGetUserAuthInfoRequest, res: Response) {
         const content = req.content;
         const campaignId = req.campaignId;
-        const influencerList1 = req.influencerList1;
-        const influencerList2 = req.influencerList2;
+        const statusID = 1;
+        const brandName = req.userBrandName;
+        const influencerIdList = req.influencerIdList;
         const influencerIdList1 = req.influencerIdList1;
         const influencerIdList2 = req.influencerIdList2;
-        const influencerIdList3 = req.influencerIdList3;
-        const statusID = 1;
-        const brandname = req.userBrand;
-        influencerList1;
-        influencerList2;
-        influencerIdList1;
+
         influencerIdList2;
         if (
+            influencerIdList.length > 0 &&
             influencerIdList1.length > 0 &&
-            influencerIdList2.length > 0 &&
-            influencerIdList3.length === 0
+            influencerIdList2.length === 0
         ) {
             return res
                 .status(406)
                 .send({ message: 'Already exist influencer' });
         } else {
-            for (const id of influencerIdList3) {
+            for (const id of influencerIdList2) {
                 const influencer = await Influencer.findOne({
                     where: {
                         id: id,
@@ -35,7 +31,7 @@ class MessageController {
                 });
                 const newMessage = new Message();
                 const touchContent =
-                    `안녕하세요. ${influencer.influencer_instagram_id}님 ${brandname.user_brandname}입니다.\n ` +
+                    `안녕하세요. ${influencer.influencer_instagram_id}님 ${brandName}입니다.\n ` +
                     content;
                 newMessage.campaignID = campaignId;
                 newMessage.statusID = statusID;

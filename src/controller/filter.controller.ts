@@ -41,7 +41,7 @@ class FilterController {
             influencerListDown;
             return res
                 .status(200)
-                .json({ message: 'Success', result: influencerListDown });
+                .send({ message: 'Success', result: influencerListDown });
         } else {
             influencerListUp;
             return res
@@ -52,41 +52,35 @@ class FilterController {
 
     async categoryList(req: IGetUserAuthInfoRequest, res: Response) {
         const categoryList = req.categoryList;
-        res.status(200).json({
+        res.status(200).send({
             message: 'Success',
             result: categoryList,
         });
     }
 
     async categoryInfluencerList(req: IGetUserAuthInfoRequest, res: Response) {
-        const influencerList = req.influencerList;
         const sortOption = req.sortOption;
         const influencerListDown = req.influencerListDown;
         const influencerListUp = req.influencerListUp;
-        influencerList;
         if (sortOption === 'down') {
             influencerListDown;
             return res
                 .status(200)
-                .json({ message: 'Success', result: influencerListDown });
+                .send({ message: 'Success', result: influencerListDown });
         } else {
             influencerListUp;
             return res
                 .status(200)
-                .json({ message: 'Success', result: influencerListUp });
+                .send({ message: 'Success', result: influencerListUp });
         }
     }
 
     async mainInfluencerList(req: IGetUserAuthInfoRequest, res: Response) {
-        const influencerList = req.influencerList;
         const influencerListDown = req.influencerListDown;
-        const influencerIdList = req.influencerIdList;
-        influencerList;
-        influencerIdList;
         influencerListDown;
         return res
             .status(200)
-            .json({ message: 'Success', result: influencerListDown });
+            .send({ message: 'Success', result: influencerListDown });
     }
 
     async influencerImageList(req: IGetUserAuthInfoRequest, res: Response) {

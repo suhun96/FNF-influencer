@@ -3,37 +3,37 @@ import { IGetUserAuthInfoRequest } from '../definition';
 
 class countController {
     async totalInfluencerCount(req: IGetUserAuthInfoRequest, res: Response) {
-        const userBrand = req.userBrand;
+        const userBrandName = req.userBrandName;
         const campaignCount = req.campaignCount;
-        const totalRequest = req.totalRequest;
-        const totalAccept = req.totalAccept;
-        const totalReject = req.totalReject;
-        const totalWait = req.totalWait;
+        const totalRequestCount = req.totalRequestCount;
+        const totalAcceptCount = req.totalAcceptCount;
+        const totalRejectCount = req.totalRejectCount;
+        const totalWaitCount = req.totalWaitCount;
         return res.status(200).send({
             message: 'Success',
             result: {
-                brand: userBrand.user_brandname,
+                brand: userBrandName,
                 campaignCount: campaignCount,
-                totalRequest: totalRequest,
-                totalAccept: totalAccept,
-                totalReject: totalReject,
-                totalWait: totalWait,
+                totalRequest: totalRequestCount,
+                totalAccept: totalAcceptCount,
+                totalReject: totalRejectCount,
+                totalWait: totalWaitCount,
             },
         });
     }
 
     async campaignInfluencerCount(req: IGetUserAuthInfoRequest, res: Response) {
-        const totalCount = req.totalCount;
-        const acceptCount = req.acceptCount;
-        const waitCount = req.waitCount;
-        const rejectCount = req.rejectCount;
+        const totalInlfuencerCount = req.totalInlfuencerCount;
+        const acceptInlfuencerCount = req.acceptInlfuencerCount;
+        const waitInlfuencerCount = req.waitInlfuencerCount;
+        const rejectInlfuencerCount = req.rejectInlfuencerCount;
         return res.status(200).send({
             message: 'Success',
             result: {
-                totalCount: totalCount,
-                acceptCount: acceptCount,
-                waitCount: waitCount,
-                rejectCount: rejectCount,
+                totalCount: totalInlfuencerCount,
+                acceptCount: acceptInlfuencerCount,
+                waitCount: waitInlfuencerCount,
+                rejectCount: rejectInlfuencerCount,
             },
         });
     }

@@ -13,14 +13,16 @@ class MessageOrmController {
         const userId = req.userId;
         const { content, influencerIDs, campaignID } = req.body;
         const brandname = await User.findOne({
-            where: { id: userId.id },
+            where: { id: userId },
             select: { user_brandname: true },
         });
-        const influencerList1 = await Influencer.find({
+
+        const influencerList = await Influencer.find({
             where: { id: In(influencerIDs) },
             select: ['id'],
         });
-        const influencerList2 = await Influencer.find({
+
+        const influencerList1 = await Influencer.find({
             relations: {
                 messages: {
                     campaign: true,
@@ -34,24 +36,22 @@ class MessageOrmController {
             },
             select: ['id'],
         });
+        const influencerIdList = influencerList.map(item => item.id);
         const influencerIdList1 = influencerList1.map(item => item.id);
-        const influencerIdList2 = influencerList2.map(item => item.id);
-        let influencerIdList3 = influencerIdList1
-            .filter(item => !influencerIdList2.includes(item))
+        const influencerIdList2 = influencerIdList
+            .filter(item => !influencerIdList1.includes(item))
             .concat(
-                influencerIdList2.filter(
-                    item => !influencerIdList1.includes(item)
+                influencerIdList1.filter(
+                    item => !influencerIdList.includes(item)
                 )
             );
-        req.userBrand = brandname;
-        req.influencerList1 = influencerList1;
-        req.influencerList2 = influencerList2;
-        req.influencerIdList1 = influencerIdList1;
-        req.influencerIdList2 = influencerIdList2;
-        req.influencerIdList3 = influencerIdList3;
+        req.userBrandName = brandname.user_brandname;
         req.content = content;
         req.campaignId = campaignID;
-        return next();
+        req.influencerIdList = influencerIdList;
+        req.influencerIdList1 = influencerIdList1;
+        req.influencerIdList2 = influencerIdList2;
+        next();
     }
 }
 

@@ -10,11 +10,7 @@ const app = express();
 
 app.use(express.json());
 app.use(bodyParser.json());
-const corsOptions = {
-    origin: '*',
-    credentials: true,
-};
-app.use(cors(corsOptions));
+app.use(cors());
 
 AppDataSource.initialize().then(async () => {
     app.use(Routes);
