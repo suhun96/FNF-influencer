@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { Message } from './entity/Message';
 export interface IGetUserAuthInfoRequest extends Request {
     user: any;
     userId: number;
@@ -32,5 +33,7 @@ export interface IGetUserAuthInfoRequest extends Request {
     instagramId: string;
     campaignOne: any;
     statusId: number;
+    changedyes: Message;
+    changedno: Message;
     message: any;
 }

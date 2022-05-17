@@ -55,9 +55,14 @@ class RequestOrmController {
         const { statusID , messageID, influencerID } = req.body
         const ID = parseInt(messageID) 
 
-        req.messageId = ID,
-        req.statusId = statusID,
-        req.influencerId = influencerID
+        const message = await AppDataSource
+        .createQueryBuilder()
+        .update(Message)
+        .set({ statusID : statusID })
+        .where({ id : messageID, influencerID : influencerID})
+        .execute();
+        
+        req.statusId = statusID
         next();
     }
 }
