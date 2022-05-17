@@ -2,13 +2,12 @@ import { Response } from 'express';
 import { Campaign } from '../entity/Campaign';
 import { Message } from '../entity/Message';
 import { IGetUserAuthInfoRequest } from '../definition';
+import AppDataSource from '../data-source';
 
 class CampaignController {
     async createCampaign(req: IGetUserAuthInfoRequest, res: Response) {
-        const userId = req.userId;
-        const campaign = req.campaign;
-        const campaignName = req.campaignName;
-        if (campaign === null) {
+        const { userId, campaign, campaignName } = req;
+        if (!campaign) {
             const myCampaign = new Campaign();
             myCampaign.userID = userId;
             myCampaign.campaign_name = campaignName;
@@ -20,36 +19,20 @@ class CampaignController {
     }
 
     async patchCampaign(req: IGetUserAuthInfoRequest, res: Response) {
-        const userId = req.userId;
-        const campaign = req.campaign;
-        const campaignOne = req.campaignOne;
-        const campaignName = req.campaignName;
-        campaign;
-        if (campaign === null) {
-            campaignOne;
-            if (campaignOne !== null) {
-                campaignOne.userID = userId;
-                campaignOne.campaign_name = campaignName;
-                await Campaign.save(campaignOne);
-                return res.status(200).send({ message: 'Success' });
-            } else {
-                return res
-                    .status(406)
-                    .send({ message: 'Campaign does not exist' });
-            }
+        const { userId, campaign, campaignName, campaignOne } = req;
+        if (!campaign) {
+            campaignOne.userID = userId;
+            campaignOne.campaign_name = campaignName;
+            await Campaign.save(campaignOne);
+            return res.status(200).send({ message: 'Success' });
         } else {
-            return res
-                .status(407)
-                .send({ message: 'Already exist campaign name' });
+            return res.status(406).send({ message: 'Already exist name' });
         }
     }
 
     async deleteCampaign(req: IGetUserAuthInfoRequest, res: Response) {
-        const campaign = req.campaignOne;
-        const message = req.message;
-        campaign;
-        if (campaign !== null) {
-            message;
+        const { messageList: message, campaignOne: campaign } = req;
+        if (!!campaign) {
             await Message.remove(message);
             await Campaign.remove(campaign);
             return res.status(200).send({ message: 'Success' });
@@ -59,7 +42,7 @@ class CampaignController {
     }
 
     async deleteInfluencer(req: IGetUserAuthInfoRequest, res: Response) {
-        const userId = req.userId;
+        const { userId } = req;
         const { influencerId, campaignId } = req.body;
         for (const id of influencerId) {
             const message = await Message.find({

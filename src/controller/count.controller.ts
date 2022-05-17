@@ -3,12 +3,14 @@ import { IGetUserAuthInfoRequest } from '../definition';
 
 class countController {
     async totalInfluencerCount(req: IGetUserAuthInfoRequest, res: Response) {
-        const userBrandName = req.userBrandName;
-        const campaignCount = req.campaignCount;
-        const totalRequestCount = req.totalRequestCount;
-        const totalAcceptCount = req.totalAcceptCount;
-        const totalRejectCount = req.totalRejectCount;
-        const totalWaitCount = req.totalWaitCount;
+        const {
+            userBrandName,
+            campaignCount,
+            totalRequestCount,
+            totalAcceptCount,
+            totalRejectCount,
+            totalWaitCount,
+        } = req;
         return res.status(200).send({
             message: 'Success',
             result: {
@@ -23,10 +25,12 @@ class countController {
     }
 
     async campaignInfluencerCount(req: IGetUserAuthInfoRequest, res: Response) {
-        const totalInlfuencerCount = req.totalInlfuencerCount;
-        const acceptInlfuencerCount = req.acceptInlfuencerCount;
-        const waitInlfuencerCount = req.waitInlfuencerCount;
-        const rejectInlfuencerCount = req.rejectInlfuencerCount;
+        const {
+            totalInlfuencerCount,
+            acceptInlfuencerCount,
+            waitInlfuencerCount,
+            rejectInlfuencerCount,
+        } = req;
         return res.status(200).send({
             message: 'Success',
             result: {

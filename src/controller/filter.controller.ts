@@ -3,7 +3,7 @@ import { IGetUserAuthInfoRequest } from '../definition';
 
 class FilterController {
     async userCampaignList(req: IGetUserAuthInfoRequest, res: Response) {
-        const userCampaignList = req.campaign;
+        const { campaignList: userCampaignList } = req;
         return res
             .status(200)
             .send({ message: 'Success', result: userCampaignList });
@@ -13,17 +13,13 @@ class FilterController {
         req: IGetUserAuthInfoRequest,
         res: Response
     ) {
-        const sortOption = req.sortOption;
-        const influencerListDown = req.influencerListDown;
-        const influencerListUp = req.influencerListUp;
+        const { sortOption, influencerListDown, influencerListUp } = req;
         if (sortOption === 'down') {
-            influencerListDown;
             return res.status(200).send({
                 message: 'influencerList',
                 result: influencerListDown,
             });
         } else {
-            influencerListUp;
             return res
                 .status(200)
                 .send({ message: 'InfluencerList', result: influencerListUp });
@@ -34,16 +30,12 @@ class FilterController {
         req: IGetUserAuthInfoRequest,
         res: Response
     ) {
-        const sortOption = req.sortOption;
-        const influencerListDown = req.influencerListDown;
-        const influencerListUp = req.influencerListUp;
+        const { sortOption, influencerListDown, influencerListUp } = req;
         if (sortOption === 'down') {
-            influencerListDown;
             return res
                 .status(200)
                 .send({ message: 'Success', result: influencerListDown });
         } else {
-            influencerListUp;
             return res
                 .status(200)
                 .send({ message: 'Success', result: influencerListUp });
@@ -51,7 +43,7 @@ class FilterController {
     }
 
     async categoryList(req: IGetUserAuthInfoRequest, res: Response) {
-        const categoryList = req.categoryList;
+        const { categoryList } = req;
         res.status(200).send({
             message: 'Success',
             result: categoryList,
@@ -59,35 +51,29 @@ class FilterController {
     }
 
     async categoryInfluencerList(req: IGetUserAuthInfoRequest, res: Response) {
-        const sortOption = req.sortOption;
-        const influencerListDown = req.influencerListDown;
-        const influencerListUp = req.influencerListUp;
+        const { sortOption, influencerListDown, influencerListUp, count } = req;
         if (sortOption === 'down') {
-            influencerListDown;
-            return res
-                .status(200)
-                .send({ message: 'Success', result: influencerListDown });
+            return res.status(200).send({
+                message: 'Success',
+                result: influencerListDown,
+                count,
+            });
         } else {
-            influencerListUp;
             return res
                 .status(200)
-                .send({ message: 'Success', result: influencerListUp });
+                .send({ message: 'Success', result: influencerListUp, count });
         }
     }
 
     async mainInfluencerList(req: IGetUserAuthInfoRequest, res: Response) {
-        const influencerListDown = req.influencerListDown;
-        influencerListDown;
+        const { influencerListDown } = req;
         return res
             .status(200)
             .send({ message: 'Success', result: influencerListDown });
     }
 
     async influencerImageList(req: IGetUserAuthInfoRequest, res: Response) {
-        const imageList = req.imageList;
-        const influencer = req.influencer;
-        imageList;
-        influencer;
+        const { imageList, influencer } = req;
         return res
             .status(200)
             .send({ message: 'Success', result: influencer, imageList });

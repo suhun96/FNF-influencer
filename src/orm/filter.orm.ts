@@ -6,7 +6,6 @@ import { Category } from '../entity/Category';
 import { Image } from '../entity/Image';
 import { Influencer } from '../entity/Influencer';
 import { Influencer_Category } from '../entity/Influencer_category';
-import { Influencer_Hashtag } from '../entity/Influencer_hashtag';
 
 class FilterOrmController {
     async findUserCampaignList(
@@ -14,7 +13,7 @@ class FilterOrmController {
         res: Response,
         next: NextFunction
     ) {
-        const userId = req.userId;
+        const { userId } = req;
         const limit = req.query.limit as string;
         const limitNumber = parseInt(limit);
         const offset = req.query.offset as string;
@@ -26,9 +25,7 @@ class FilterOrmController {
             skip: offsetNumber,
             take: limitNumber,
         });
-
-        console.log(userId, offsetNumber, limitNumber);
-        req.campaign = userCampaignList;
+        req.campaignList = userCampaignList;
         next();
     }
 
@@ -37,7 +34,7 @@ class FilterOrmController {
         res: Response,
         next: NextFunction
     ) {
-        const userId = req.userId;
+        const { userId } = req;
         const limit = req.query.limit as string;
         const limitNumber = parseInt(limit);
         const offset = req.query.offset as string;
@@ -105,7 +102,7 @@ class FilterOrmController {
         res: Response,
         next: NextFunction
     ) {
-        const userId = req.userId;
+        const { userId } = req;
         const limit = req.query.limit as string;
         const limitNumber = parseInt(limit);
         const offset = req.query.offset as string;
@@ -200,7 +197,7 @@ class FilterOrmController {
             },
         });
         const influencerIdList = influencerList.map(item => item.influencer.id);
-        const influencerListDown = await Influencer.findAndCount({
+        const [influencerListDown, count] = await Influencer.findAndCount({
             relations: {
                 influencer_categories: { category: true },
                 influencer_hashtags: { hashtag: true },
@@ -210,7 +207,7 @@ class FilterOrmController {
             skip: offsetNumber,
             take: limitNumber,
         });
-        const influencerListUp = await Influencer.findAndCount({
+        const [influencerListUp] = await Influencer.findAndCount({
             relations: {
                 influencer_categories: { category: true },
                 influencer_hashtags: { hashtag: true },
@@ -223,6 +220,8 @@ class FilterOrmController {
         req.influencerListUp = influencerListUp;
         req.influencerListDown = influencerListDown;
         req.sortOption = sortOption;
+        req.count = count;
+
         next();
     }
 
@@ -242,7 +241,7 @@ class FilterOrmController {
             },
         });
         const influencerIdList = influencerList.map(item => item.influencer.id);
-        const influencerListDown = await Influencer.findAndCount({
+        const [influencerListDown] = await Influencer.findAndCount({
             relations: {
                 influencer_categories: { category: true },
                 influencer_hashtags: { hashtag: true },

@@ -5,15 +5,15 @@ import { IGetUserAuthInfoRequest } from '../definition';
 
 class MessageController {
     async send(req: IGetUserAuthInfoRequest, res: Response) {
-        const content = req.content;
-        const campaignId = req.campaignId;
+        const {
+            content,
+            campaignId,
+            userBrandName: brandName,
+            influencerIdList,
+            influencerIdList1,
+            influencerIdList2,
+        } = req;
         const statusID = 1;
-        const brandName = req.userBrandName;
-        const influencerIdList = req.influencerIdList;
-        const influencerIdList1 = req.influencerIdList1;
-        const influencerIdList2 = req.influencerIdList2;
-
-        influencerIdList2;
         if (
             influencerIdList.length > 0 &&
             influencerIdList1.length > 0 &&
@@ -41,7 +41,7 @@ class MessageController {
                 continue;
             }
         }
-        return res.status(200).send({ Message: 'Success' });
+        return res.status(200).send({ message: 'Success' });
     }
 }
 

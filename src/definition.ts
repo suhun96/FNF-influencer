@@ -1,9 +1,13 @@
 import { Request } from 'express';
+import { Campaign } from './entity/Campaign';
+import { Category } from './entity/Category';
+import { Image } from './entity/Image';
+import { Influencer } from './entity/Influencer';
 import { Message } from './entity/Message';
+import { User } from './entity/User';
 export interface IGetUserAuthInfoRequest extends Request {
-    user: any;
+    user: User;
     userId: number;
-    campaign: object;
     campaignName: string;
     userBrandName: string;
     campaignCount: number;
@@ -16,24 +20,25 @@ export interface IGetUserAuthInfoRequest extends Request {
     waitInlfuencerCount: number;
     rejectInlfuencerCount: number;
     sortOption: string;
-    influencerListDown: object;
-    influencerListUp: object;
-    categoryList: object;
-    influencerList: object;
-    imageList: object;
     campaignId: number;
     content: string;
-    influencer: object;
-    influencerIdList: Array<number>;
-    influencerIdList1: Array<number>;
-    influencerIdList2: Array<number>;
-    // 수훈
+    count: number;
+    influencer: Influencer;
     messageId: number;
     influencerId: number;
     instagramId: string;
-    campaignOne: any;
     statusId: number;
-    changedyes: Message;
-    changedno: Message;
-    message: any;
+    campaign: Campaign;
+    campaignOne: Campaign;
+    campaignList: Campaign[];
+    categoryList: Category[];
+    influencerListDown: Influencer[];
+    influencerListUp: Influencer[];
+    influencerList: Influencer[];
+    imageList: Image[];
+    messageList: Message[];
+    message: Message;
+    influencerIdList: Array<number>;
+    influencerIdList1: Array<number>;
+    influencerIdList2: Array<number>;
 }
