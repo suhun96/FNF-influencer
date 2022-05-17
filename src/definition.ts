@@ -26,6 +26,11 @@ export interface IGetUserAuthInfoRequest extends Request {
     influencerIdList: Array<number>;
     influencerIdList1: Array<number>;
     influencerIdList2: Array<number>;
+    // 수훈
+    messageId: number;
+    influencerId : number;
+    instagramId : string;
     campaignOne: any;
+    statusId : number;
     message: any;
 }
