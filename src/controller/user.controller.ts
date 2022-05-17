@@ -32,8 +32,8 @@ class UserController {
     }
 
     async signIn(req: IGetUserAuthInfoRequest, res: Response) {
-        const user = req.user;
-        const token = jwt.sign({ id: user.id }, config.auth.secret, {
+        const userId = req.userId;
+        const token = jwt.sign({ id: userId }, config.auth.secret, {
             expiresIn: '15d',
         });
         return res.status(200).send({ message: 'Login success', token: token });

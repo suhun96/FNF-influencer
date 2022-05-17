@@ -6,11 +6,11 @@ import { IGetUserAuthInfoRequest } from '../definition';
 class CampaignController {
     async createCampaign(req: IGetUserAuthInfoRequest, res: Response) {
         const userId = req.userId;
-        const campaign = req.campaignOne;
+        const campaign = req.campaign;
         const campaignName = req.campaignName;
         if (campaign === null) {
             const myCampaign = new Campaign();
-            myCampaign.userID = userId.id;
+            myCampaign.userID = userId;
             myCampaign.campaign_name = campaignName;
             Campaign.getRepository().save(myCampaign);
             return res.status(201).send({ message: 'Success' });
@@ -24,13 +24,13 @@ class CampaignController {
         const campaign = req.campaign;
         const campaignOne = req.campaignOne;
         const campaignName = req.campaignName;
-        campaignOne;
-        if (campaignOne === null) {
-            campaign;
-            if (campaign !== null) {
-                campaign.userID = userId;
-                campaign.campaign_name = campaignName;
-                await Campaign.save(campaign);
+        campaign;
+        if (campaign === null) {
+            campaignOne;
+            if (campaignOne !== null) {
+                campaignOne.userID = userId;
+                campaignOne.campaign_name = campaignName;
+                await Campaign.save(campaignOne);
                 return res.status(200).send({ message: 'Success' });
             } else {
                 return res
@@ -45,8 +45,9 @@ class CampaignController {
     }
 
     async deleteCampaign(req: IGetUserAuthInfoRequest, res: Response) {
-        const campaign = req.campaign;
+        const campaign = req.campaignOne;
         const message = req.message;
+        campaign;
         if (campaign !== null) {
             message;
             await Message.remove(message);
@@ -65,7 +66,7 @@ class CampaignController {
                 relations: { campaign: true },
                 where: {
                     influencerID: id,
-                    campaign: { id: campaignId, userID: userId.id },
+                    campaign: { id: campaignId, userID: userId },
                 },
             });
             if (message) {

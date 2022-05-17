@@ -10,8 +10,9 @@ class TokenController {
         next: NextFunction
     ) {
         const token = req.headers.authorization;
-        const userId = await jwt.verify(token, config.auth.secret);
+        const user = await jwt.verify(token, config.auth.secret);
         if (token) {
+            const userId = user.id;
             req.userId = userId;
             next();
         } else {

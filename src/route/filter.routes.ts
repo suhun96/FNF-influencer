@@ -26,11 +26,7 @@ router.get(
     ),
     wrapAsyncController(filterController.campaignTotalStatusInfluencerList)
 );
-router.get(
-    '/category-list',
-    wrapAsyncController(filterOrmController.findCategoryList),
-    wrapAsyncController(filterController.categoryList)
-);
+
 router.get(
     '/category-influencer-list',
     wrapAsyncController(tokenController.verifyToken),
@@ -40,8 +36,15 @@ router.get(
 
 router.get(
     '/influencer-image/:influencerId',
+    wrapAsyncController(tokenController.verifyToken),
     filterOrmController.findInfluencerImageList,
     filterController.influencerImageList
+);
+
+router.get(
+    '/category-list',
+    wrapAsyncController(filterOrmController.findCategoryList),
+    wrapAsyncController(filterController.categoryList)
 );
 
 router.get(

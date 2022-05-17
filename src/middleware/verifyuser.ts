@@ -2,6 +2,7 @@ import { NextFunction, Response } from 'express';
 import { User } from '../entity/User';
 import { IGetUserAuthInfoRequest } from '../definition';
 import * as bcrypt from 'bcrypt';
+import { UsingJoinColumnIsNotAllowedError } from 'typeorm';
 
 export const checkUserPassword = (
     req: IGetUserAuthInfoRequest,

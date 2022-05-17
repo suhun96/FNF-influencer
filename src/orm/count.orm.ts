@@ -13,50 +13,50 @@ class CountOrmController {
         const userId = req.userId;
         const userBrand = await User.findOne({
             select: ['user_brandname'],
-            where: { id: userId.id },
+            where: { id: userId },
         });
 
         const campaignCount = await Campaign.count({
-            where: { userID: userId.id },
+            where: { userID: userId },
         });
 
-        const totalRequest = await Message.count({
+        const totalRequestCount = await Message.count({
             relations: { campaign: true },
             where: {
-                campaign: { userID: userId.id },
+                campaign: { userID: userId },
             },
         });
 
-        const totalAccept = await Message.count({
+        const totalAcceptCount = await Message.count({
             relations: { campaign: true },
             where: {
                 statusID: 2,
-                campaign: { userID: userId.id },
+                campaign: { userID: userId },
             },
         });
 
-        const totalReject = await Message.count({
+        const totalRejectCount = await Message.count({
             relations: { campaign: true },
             where: {
                 statusID: 3,
-                campaign: { userID: userId.id },
+                campaign: { userID: userId },
             },
         });
 
-        const totalWait = await Message.count({
+        const totalWaitCount = await Message.count({
             relations: { campaign: true },
             where: {
                 statusID: 1,
-                campaign: { userID: userId.id },
+                campaign: { userID: userId },
             },
         });
-        req.userBrand = userBrand;
+        req.userBrandName = userBrand.user_brandname;
         req.campaignCount = campaignCount;
-        req.totalRequest = totalRequest;
-        req.totalAccept = totalAccept;
-        req.totalReject = totalReject;
-        req.totalWait = totalWait;
-        return next();
+        req.totalRequestCount = totalRequestCount;
+        req.totalAcceptCount = totalAcceptCount;
+        req.totalRejectCount = totalRejectCount;
+        req.totalWaitCount = totalWaitCount;
+        next();
     }
 
     async countInfluencerWithCampaignId(
@@ -65,14 +65,14 @@ class CountOrmController {
         next: NextFunction
     ) {
         const campaignId = parseInt(req.params.campaignId);
-        const totalCount = await Message.count({
+        const totalInlfuencerCount = await Message.count({
             relations: { campaign: true },
             where: {
                 campaign: { id: campaignId },
             },
         });
 
-        const acceptCount = await Message.count({
+        const acceptInlfuencerCount = await Message.count({
             relations: { campaign: true },
             where: {
                 statusID: 2,
@@ -80,7 +80,7 @@ class CountOrmController {
             },
         });
 
-        const waitCount = await Message.count({
+        const waitInlfuencerCount = await Message.count({
             relations: { campaign: true },
             where: {
                 statusID: 1,
@@ -88,18 +88,18 @@ class CountOrmController {
             },
         });
 
-        const rejectCount = await Message.count({
+        const rejectInlfuencerCount = await Message.count({
             relations: { campaign: true },
             where: {
                 statusID: 3,
                 campaign: { id: campaignId },
             },
         });
-        req.totalCount = totalCount;
-        req.acceptCount = acceptCount;
-        req.waitCount = waitCount;
-        req.rejectCount = rejectCount;
-        return next();
+        req.totalInlfuencerCount = totalInlfuencerCount;
+        req.acceptInlfuencerCount = acceptInlfuencerCount;
+        req.waitInlfuencerCount = waitInlfuencerCount;
+        req.rejectInlfuencerCount = rejectInlfuencerCount;
+        next();
     }
 }
 
