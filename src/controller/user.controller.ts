@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { IGetUserAuthInfoRequest } from '../definition';
 import { User } from '../entity/User';
 import * as bcrypt from 'bcrypt';
-
 const jwt = require('jsonwebtoken');
 
 class UserController {
@@ -31,8 +30,8 @@ class UserController {
     }
 
     async signIn(req: IGetUserAuthInfoRequest, res: Response) {
-        const userId = req.userId;
-        const token = jwt.sign({ id: userId }, process.env.SECRET_KEY, {
+        const user = req.user;
+        const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
             expiresIn: '15d',
         });
         return res.status(200).send({ message: 'Login success', token: token });

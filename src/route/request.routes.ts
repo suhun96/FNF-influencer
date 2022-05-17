@@ -8,11 +8,11 @@ router.post(
     '/send',
     wrapAsyncController(requestOrmController.sendOrm),
     wrapAsyncController(requestControl.send)
-)
+);
 router.post(
-    '/chamge',
+    '/change',
     wrapAsyncController(requestOrmController.changeOrm),
     wrapAsyncController(requestControl.change)
-)
+);
 
 export default router;
