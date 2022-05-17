@@ -6,6 +6,7 @@ import { Category } from '../entity/Category';
 import { Image } from '../entity/Image';
 import { Influencer } from '../entity/Influencer';
 import { Influencer_Category } from '../entity/Influencer_category';
+import { Influencer_Hashtag } from '../entity/Influencer_hashtag';
 
 class FilterOrmController {
     async findUserCampaignList(
@@ -268,15 +269,15 @@ class FilterOrmController {
             select: ['image_url'],
         });
         const influencer = await Influencer.findOne({
+            relations: {
+                influencer_hashtags: {
+                    hashtag: true,
+                },
+            },
             where: { id: influencerId },
-            select: [
-                'influencer_follower',
-                'influencer_img',
-                'influencer_instagram_id',
-                'influencer_posting',
-                'influencer_average_like',
-                'influencer_average_comment',
-            ],
+            select: {
+                influencer_hashtags: true,
+            },
         });
         req.imageList = imageList;
         req.influencer = influencer;
