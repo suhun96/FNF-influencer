@@ -15,8 +15,8 @@ router.post(
 
 router.patch(
     '/update-message/:campaignid',
-    wrapAsyncController(campaignormcontroller.findCampaignWithCampaignName),
     wrapAsyncController(campaignormcontroller.findCampiagnWithCampaignId),
+    wrapAsyncController(campaignormcontroller.findCampaignWithCampaignName),
     wrapAsyncController(campaignController.patchCampaign)
 );
 

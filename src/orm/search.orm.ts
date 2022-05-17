@@ -28,7 +28,7 @@ class SearchOrmController {
             },
         });
         const influencerIdList = influencerList.map(item => item.influencer.id);
-        const influencerListDown = await Influencer.findAndCount({
+        const [influencerListDown, count] = await Influencer.findAndCount({
             relations: {
                 influencer_categories: { category: true },
                 influencer_hashtags: { hashtag: true },
@@ -38,7 +38,7 @@ class SearchOrmController {
             skip: offsetNumber,
             take: limitNumber,
         });
-        const influencerListUp = await Influencer.findAndCount({
+        const [influencerListUp] = await Influencer.findAndCount({
             relations: {
                 influencer_categories: { category: true },
                 influencer_hashtags: { hashtag: true },
@@ -51,6 +51,7 @@ class SearchOrmController {
         req.influencerListUp = influencerListUp;
         req.influencerListDown = influencerListDown;
         req.sortOption = sortOption;
+        req.count = count;
         next();
     }
 }

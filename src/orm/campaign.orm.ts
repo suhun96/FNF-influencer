@@ -9,7 +9,7 @@ class CampaignOrmController {
         res: Response,
         next: NextFunction
     ) {
-        const userId = req.userId;
+        const { userId } = req;
         const { campaignName } = req.body;
         const campaign = await Campaign.findOne({
             where: { userID: userId, campaign_name: campaignName },
@@ -40,7 +40,7 @@ class CampaignOrmController {
         res: Response,
         next: NextFunction
     ) {
-        const userId = req.userId;
+        const { userId } = req;
         const campaignId = parseInt(req.params.campaignid);
         const message = await Message.find({
             relations: { campaign: true },
@@ -49,7 +49,7 @@ class CampaignOrmController {
                 campaign: { userID: userId },
             },
         });
-        req.message = message;
+        req.messageList = message;
         next();
     }
 }

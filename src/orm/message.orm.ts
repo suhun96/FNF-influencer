@@ -10,7 +10,7 @@ class MessageOrmController {
         res: Response,
         next: NextFunction
     ) {
-        const userId = req.userId;
+        const { userId } = req;
         const { content, influencerIDs, campaignID } = req.body;
         const brandname = await User.findOne({
             where: { id: userId },

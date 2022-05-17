@@ -10,7 +10,7 @@ class CountOrmController {
         res: Response,
         next: NextFunction
     ) {
-        const userId = req.userId;
+        const { userId } = req;
         const userBrand = await User.findOne({
             select: ['user_brandname'],
             where: { id: userId },
